@@ -161,7 +161,7 @@ res://rpg_data/
 ## Community & Support
 
 - **Patreon** - https://patreon.com/JROne2717
-- **Discord** - https://discord.gg/tXZw3gDNSk
+- **Discord** - https://discord.gg/EbD9r95FA4
 
 ---
 
