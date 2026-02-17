@@ -1,97 +1,115 @@
 # ForgeKitCore
 Modular RPG framework for Godot 4.x. Free core data tools and editors. Advanced runtime systems available via Patreon.
 
-What Is ForgeKit?
+ForgeKit Core
 
-ForgeKit is a structured framework for building RPG systems in Godot without starting from scratch.
+ForgeKit is a modular RPG framework for Godot 4.x.
 
-It focuses on clean data architecture, editor tooling, and modular design so you can build faster without locking yourself into a rigid engine template.
+It gives you structure, clean data tools, and a solid foundation so you can stop rebuilding the same systems every project.
 
-ForgeKit Core includes the foundational tools. The runtime layer is available separately through Patreon.
+The Core is free.
+Advanced runtime systems are supported through Patreon.
+
+Why ForgeKit Exists
+
+If you’ve built more than one RPG in Godot, you already know the cycle.
+
+You recreate stats.
+You recreate items.
+You recreate dialogue structures.
+You wire it all up again.
+
+ForgeKit exists to break that loop.
+
+This is about building a foundation once and improving it over time, together.
+
+What You Get in ForgeKit Core
+
+Structured RPG data resources
+
+Editor tooling to manage your data cleanly
+
+Modular architecture designed to expand with your project
+
+A foundation you can actually understand and modify
+
+You are not locked into someone else’s vision of how your game should work.
+
+ForgeKit gives you tools, not constraints.
 
 What This Is Not
 
-Not a drag-and-drop complete game
+Not a finished RPG template
 
-Not a visual scripting replacement
+Not a no-code solution
 
-Not a restrictive “engine inside an engine”
+Not an engine replacement
 
-Not a bloated all-in-one template
+Not a black box system
 
-ForgeKit gives you structure, not constraints.
+You still build your game.
+ForgeKit just removes the boring repetition.
 
-Who It’s For
+Who This Is For
 
 Indie developers building RPGs in Godot
 
-Devs who want strong data architecture
+Solo devs who want clean architecture
 
-Teams that value modular systems
+Small teams that value modular systems
 
-Solo devs tired of rebuilding the same RPG foundations
+Builders who like understanding their tools
 
-If you like clean systems and control over your project, this is for you.
+If you care about structure and scalability, you will feel at home here.
 
-What’s Included in ForgeKit Core
+Runtime Systems and Patreon
 
-Core data resources
-Editor tooling for managing RPG data
-Structured architecture designed for expansion
-Modular design so you can use only what you need
+ForgeKit Core will always remain free.
 
-The Core is fully usable on its own.
+Advanced runtime systems are developed separately and funded through Patreon support.
 
-Patreon Runtime Layer
+All paid tiers receive the full runtime layer.
+Lower tiers receive updates at full release milestones.
+Higher tiers receive access as systems are built.
 
-Advanced runtime systems are developed separately and available to supporters.
+The goal is simple:
+Keep the foundation free. Fund the deeper systems sustainably.
 
-This includes:
+Long Term Vision
 
-Combat runtime systems
-Advanced progression systems
-Extended gameplay frameworks
-Ongoing feature updates
+ForgeKit starts with RPG systems.
 
-All paid tiers receive the full runtime.
-Lower tiers receive updates at major release points.
-Higher tiers receive early access during development.
+The larger vision is a modular framework that can support multiple genres without becoming bloated or messy.
 
-The goal is sustainability without locking the foundation behind a paywall.
-
-Design Philosophy
-
-ForgeKit is built around three principles:
-
-Modular by default
-
-Expandable without refactoring
-
-Clean data first, runtime second
-
-You own your project. ForgeKit supports it.
+This will grow over time, in public.
 
 Installation
 
 Download or clone this repository
 
-Place the addon folder inside your project’s res://addons/ directory
+Place the addon folder in res://addons/
 
-Enable ForgeKit in Project Settings under Plugins
+Enable ForgeKit in Project Settings → Plugins
 
-Documentation will expand as features grow.
+Documentation will expand alongside development.
 
-Roadmap Direction
+Join the Project
 
-RPG systems are the starting point.
+ForgeKit is being built openly.
 
-Long term vision includes multi-genre support built on the same modular framework philosophy.
+If you have ideas, feedback, or want to contribute, open an issue or start a discussion.
 
-Support Development
+If you want to support ongoing development, you can join on Patreon.
 
-If you want advanced runtime systems and active development updates, support ForgeKit on Patreon.
+Link: [Add Patreon Link]
 
-Link: [Add Patreon Link Here]
+ForgeKit is not just a plugin.
+It’s a foundation we improve together.
 
-ForgeKit is built in public.
-Feedback, issues, and suggestions are welcome.
+ForgeKit started because rebuilding the same RPG systems every project stopped being exciting.
+
+The goal is to build a clean, modular foundation once and improve it steadily instead of rewriting everything from scratch each time.
+
+This is being developed openly and iterated on over time. It will evolve as it’s used in real projects.
+
+If you’re here early, you’re helping shape what it becomes.
