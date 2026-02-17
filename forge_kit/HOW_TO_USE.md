@@ -104,7 +104,7 @@ The **Setup** tab (second tab) lets you configure your RPG's core systems before
 
 ### What "Save Settings" Creates
 
-- An **FKSettings** resource at `res://rpg_data/fk_settings/game_settings.tres` storing all your choices
+- An **FKSettings** resource at `res://rpg_data/rpg_settings/game_settings.tres` storing all your choices
 - **FKStat** resources for each selected base stat (only creates new ones, won't overwrite existing)
 - **FKDerivedStat** resources for each derived stat from the genre preset
 
@@ -155,7 +155,7 @@ If you prefer to build everything from scratch, the ForgeKit dock has five tabs:
 Stats are the foundation of your RPG. They define the attributes that characters and enemies use.
 
 1. In the ForgeKit dock, click **New Stat**
-2. Choose a save location (the default `res://rpg_data/fk_stat/` is recommended)
+2. Choose a save location (the default `res://rpg_data/rpg_stat/` is recommended)
 3. Name the file (e.g., `strength.tres`)
 4. In the Inspector, fill in:
    - **Id**: `strength` (used in code to reference this stat)
@@ -191,7 +191,7 @@ Classes define character archetypes like Warrior, Mage, or Rogue.
 5. Set **Equippable Types** for what gear this class can use:
    - Example: `["sword", "shield", "heavy_armor"]`
 6. Set **Abilities By Level** as a Dictionary mapping levels to ability paths:
-   - Example: `{1: ["res://rpg_data/fk_ability/slash.tres"], 5: ["res://rpg_data/fk_ability/power_strike.tres"]}`
+   - Example: `{1: ["res://rpg_data/rpg_ability/slash.tres"], 5: ["res://rpg_data/rpg_ability/power_strike.tres"]}`
 7. Configure the **EXP curve** (Linear, Quadratic, or Cubic)
 
 ---
@@ -537,7 +537,7 @@ The tester has three columns:
 - Hit Count - Number of hits per ability use
 
 **Attacker Stats (middle column):**
-- A SpinBox for each stat defined in your project (auto-loaded from `rpg_data/fk_stat/`)
+- A SpinBox for each stat defined in your project (auto-loaded from `rpg_data/rpg_stat/`)
 - Adjust these to simulate different character builds
 
 **Defender Stats (right column):**
@@ -639,7 +639,7 @@ The Import/Export tool lets you save all your ForgeKit resources as a JSON file 
 
 **What gets exported:**
 - All `@export` properties from each resource
-- Resource references are stored as file paths (e.g., `{"_resource_path": "res://rpg_data/fk_item/potion.tres"}`)
+- Resource references are stored as file paths (e.g., `{"_resource_path": "res://rpg_data/rpg_item/potion.tres"}`)
 - Vector2, Vector2i, and Color values are stored as readable dictionaries
 - Each entry includes a `_type` field identifying the resource type
 

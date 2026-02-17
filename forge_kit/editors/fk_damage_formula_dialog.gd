@@ -44,7 +44,7 @@ func _ready() -> void:
 
 func _load_stats() -> void:
 	_stat_ids.clear()
-	var stat_dir: String = "res://rpg_data/fk_stat/"
+	var stat_dir: String = "res://rpg_data/rpg_stat/"
 	if not DirAccess.dir_exists_absolute(stat_dir):
 		# Fallback defaults
 		_stat_ids = ["strength", "dexterity", "intelligence", "wisdom", "vitality"]
@@ -311,7 +311,7 @@ func _on_load_ability() -> void:
 	dialog.title = "Select Ability Resource"
 	dialog.add_filter("*.tres ; Godot Resource")
 
-	var default_dir: String = "res://rpg_data/fk_ability/"
+	var default_dir: String = "res://rpg_data/rpg_ability/"
 	if DirAccess.dir_exists_absolute(default_dir):
 		dialog.current_dir = default_dir
 	else:
@@ -361,7 +361,7 @@ func _on_load_enemy() -> void:
 	dialog.title = "Select Enemy Resource"
 	dialog.add_filter("*.tres ; Godot Resource")
 
-	var default_dir: String = "res://rpg_data/fk_enemy/"
+	var default_dir: String = "res://rpg_data/rpg_enemy/"
 	if DirAccess.dir_exists_absolute(default_dir):
 		dialog.current_dir = default_dir
 	else:

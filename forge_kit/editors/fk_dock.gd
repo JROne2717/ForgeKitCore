@@ -147,6 +147,10 @@ const RESOURCE_CATEGORIES := {
 }
 
 
+func _get_resource_dir(res_type: String) -> String:
+	return "res://rpg_data/rpg_" + res_type.trim_prefix("FK").to_snake_case() + "/"
+
+
 func _ready() -> void:
 	name = "ForgeKit"
 	custom_minimum_size = Vector2(250, 400)
@@ -345,14 +349,27 @@ func _run_quick_setup() -> void:
 		{"id": "ice_shard", "display_name": "Ice Shard", "description": "Launches a razor-sharp shard of ice at one enemy.", "ability_type": "Magical", "target_type": "Single Enemy", "element": "Ice", "mp_cost": 6, "base_power": 20.0, "scaling_stat": "intelligence", "scaling_multiplier": 1.2, "level_requirement": 1},
 		{"id": "heal", "display_name": "Heal", "description": "Restores HP to a single ally.", "ability_type": "Healing", "target_type": "Single Ally", "element": "None", "mp_cost": 5, "base_power": 30.0, "scaling_stat": "wisdom", "scaling_multiplier": 1.5, "level_requirement": 1},
 		{"id": "group_heal", "display_name": "Group Heal", "description": "Restores HP to all allies.", "ability_type": "Healing", "target_type": "All Allies", "element": "None", "mp_cost": 15, "base_power": 20.0, "scaling_stat": "wisdom", "scaling_multiplier": 1.2, "level_requirement": 8},
-		{"id": "shield_bash", "display_name": "Shield Bash", "description": "Bashes an enemy with your shield. May stun.", "ability_type": "Physical", "target_type": "Single Enemy", "element": "None", "mp_cost": 5, "base_power": 20.0, "scaling_stat": "strength", "scaling_multiplier": 0.8, "status_effects": [{"status": "stun", "chance": 0.3, "duration": 1}], "level_requirement": 3},
-		{"id": "poison_sting", "display_name": "Poison Sting", "description": "A venomous strike that may poison the target.", "ability_type": "Physical", "target_type": "Single Enemy", "element": "None", "mp_cost": 4, "base_power": 12.0, "scaling_stat": "dexterity", "scaling_multiplier": 1.0, "status_effects": [{"status": "poison", "chance": 0.5, "duration": 3}], "level_requirement": 2},
+		{"id": "shield_bash", "display_name": "Shield Bash", "description": "Bashes an enemy with your shield. May stun.", "ability_type": "Physical", "target_type": "Single Enemy", "element": "None", "mp_cost": 5, "base_power": 20.0, "scaling_stat": "strength", "scaling_multiplier": 0.8, "level_requirement": 3},
+		{"id": "poison_sting", "display_name": "Poison Sting", "description": "A venomous strike that may poison the target.", "ability_type": "Physical", "target_type": "Single Enemy", "element": "None", "mp_cost": 4, "base_power": 12.0, "scaling_stat": "dexterity", "scaling_multiplier": 1.0, "level_requirement": 2},
 	]
 
 	for ab in ability_defs:
 		var path: String = "res://rpg_data/rpg_ability/" + ab["id"] + ".tres"
 		_make_resource(base + "fk_ability.gd", ab, path)
 		_log_setup("  + Ability: " + ab["display_name"])
+
+	# Assign status_effects separately as typed arrays so Godot serializes them.
+	var shield_bash_fx: Array[Dictionary] = []
+	shield_bash_fx.append({"status": "stun", "chance": 0.3, "duration": 1})
+	var shield_bash_res: Resource = load("res://rpg_data/rpg_ability/shield_bash.tres")
+	shield_bash_res.set("status_effects", shield_bash_fx)
+	ResourceSaver.save(shield_bash_res, "res://rpg_data/rpg_ability/shield_bash.tres")
+
+	var poison_sting_fx: Array[Dictionary] = []
+	poison_sting_fx.append({"status": "poison", "chance": 0.5, "duration": 3})
+	var poison_sting_res: Resource = load("res://rpg_data/rpg_ability/poison_sting.tres")
+	poison_sting_res.set("status_effects", poison_sting_fx)
+	ResourceSaver.save(poison_sting_res, "res://rpg_data/rpg_ability/poison_sting.tres")
 
 	# ===== PASSIVE SKILLS =====
 	_log_setup("[b]Creating Passive Skills...[/b]")
@@ -522,28 +539,35 @@ func _run_quick_setup() -> void:
 	var iron_sword_ref: Resource = load("res://rpg_data/rpg_item/iron_sword.tres")
 	var leather_armor_ref: Resource = load("res://rpg_data/rpg_item/leather_armor.tres")
 
+	# Build loot table entries as typed arrays so Godot serializes them properly.
+	var common_entries: Array[Dictionary] = []
+	common_entries.append({"item": potion_ref, "weight": 60, "min_quantity": 1, "max_quantity": 2, "drop_chance": 0.5})
+	common_entries.append({"item": ether_ref, "weight": 25, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.3})
+	common_entries.append({"item": antidote_ref, "weight": 15, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.25})
+
 	var common_loot: Dictionary = {
 		"id": "common_drops", "display_name": "Common Drops",
-		"entries": [
-			{"item": potion_ref, "weight": 60, "min_quantity": 1, "max_quantity": 2, "drop_chance": 0.5},
-			{"item": ether_ref, "weight": 25, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.3},
-			{"item": antidote_ref, "weight": 15, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.25},
-		],
 		"roll_count": 1, "allow_duplicates": false, "guaranteed_drops": 0,
 	}
-	_make_resource(base + "fk_loot_table.gd", common_loot, "res://rpg_data/rpg_loot_table/common_drops.tres")
+	var common_path: String = "res://rpg_data/rpg_loot_table/common_drops.tres"
+	var common_res: Resource = _make_resource(base + "fk_loot_table.gd", common_loot, common_path)
+	common_res.set("entries", common_entries)
+	ResourceSaver.save(common_res, common_path)
 	_log_setup("  + Loot Table: Common Drops")
+
+	var boss_entries: Array[Dictionary] = []
+	boss_entries.append({"item": iron_sword_ref, "weight": 40, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.8})
+	boss_entries.append({"item": leather_armor_ref, "weight": 30, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.6})
+	boss_entries.append({"item": potion_ref, "weight": 30, "min_quantity": 2, "max_quantity": 5, "drop_chance": 1.0})
 
 	var boss_loot: Dictionary = {
 		"id": "boss_drops", "display_name": "Boss Drops",
-		"entries": [
-			{"item": iron_sword_ref, "weight": 40, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.8},
-			{"item": leather_armor_ref, "weight": 30, "min_quantity": 1, "max_quantity": 1, "drop_chance": 0.6},
-			{"item": potion_ref, "weight": 30, "min_quantity": 2, "max_quantity": 5, "drop_chance": 1.0},
-		],
 		"roll_count": 2, "allow_duplicates": true, "guaranteed_drops": 1,
 	}
-	_make_resource(base + "fk_loot_table.gd", boss_loot, "res://rpg_data/rpg_loot_table/boss_drops.tres")
+	var boss_path: String = "res://rpg_data/rpg_loot_table/boss_drops.tres"
+	var boss_res: Resource = _make_resource(base + "fk_loot_table.gd", boss_loot, boss_path)
+	boss_res.set("entries", boss_entries)
+	ResourceSaver.save(boss_res, boss_path)
 	_log_setup("  + Loot Table: Boss Drops")
 
 	# ===== ENCOUNTER TABLE =====
@@ -553,17 +577,21 @@ func _run_quick_setup() -> void:
 	var goblin_ref: Resource = load("res://rpg_data/rpg_enemy/goblin.tres")
 	var skeleton_ref: Resource = load("res://rpg_data/rpg_enemy/skeleton.tres")
 
+	# Build encounter entries as typed arrays so Godot serializes them properly.
+	var encounter_entries: Array[Dictionary] = []
+	encounter_entries.append({"enemies": [slime_ref], "weight": 50, "min_count": 1, "max_count": 3})
+	encounter_entries.append({"enemies": [goblin_ref], "weight": 30, "min_count": 1, "max_count": 2})
+	encounter_entries.append({"enemies": [skeleton_ref], "weight": 15, "min_count": 1, "max_count": 1})
+	encounter_entries.append({"enemies": [slime_ref, goblin_ref], "weight": 5, "min_count": 1, "max_count": 2})
+
 	var forest_encounters: Dictionary = {
 		"id": "forest_encounters", "display_name": "Forest Encounters",
-		"entries": [
-			{"enemies": [slime_ref], "weight": 50, "min_count": 1, "max_count": 3},
-			{"enemies": [goblin_ref], "weight": 30, "min_count": 1, "max_count": 2},
-			{"enemies": [skeleton_ref], "weight": 15, "min_count": 1, "max_count": 1},
-			{"enemies": [slime_ref, goblin_ref], "weight": 5, "min_count": 1, "max_count": 2},
-		],
 		"base_steps": 25, "step_variance": 0.5, "avoidable": true, "max_enemies_per_battle": 4,
 	}
-	_make_resource(base + "fk_encounter_table.gd", forest_encounters, "res://rpg_data/rpg_encounter_table/forest_encounters.tres")
+	var encounters_path: String = "res://rpg_data/rpg_encounter_table/forest_encounters.tres"
+	var encounters_res: Resource = _make_resource(base + "fk_encounter_table.gd", forest_encounters, encounters_path)
+	encounters_res.set("entries", encounter_entries)
+	ResourceSaver.save(encounters_res, encounters_path)
 	_log_setup("  + Encounter Table: Forest Encounters")
 
 	# ===== ZONE =====
@@ -587,28 +615,38 @@ func _run_quick_setup() -> void:
 	# ===== DIALOGUE =====
 	_log_setup("[b]Creating Dialogue...[/b]")
 
+	# Build dialogue nodes as typed Array[Dictionary] so Godot serializes them properly.
+	var dialogue_nodes: Array[Dictionary] = []
+	dialogue_nodes.append({"id": "node_0", "type": "text", "speaker": "Village Elder", "text": "Welcome, young adventurer! Our village has been troubled by monsters in the Emerald Forest.", "next": "node_1"})
+	var choice_list: Array[Dictionary] = []
+	choice_list.append({"text": "I'll take care of it!", "next": "node_accept"})
+	choice_list.append({"text": "Tell me more about the monsters.", "next": "node_info"})
+	choice_list.append({"text": "Not right now.", "next": "node_decline"})
+	dialogue_nodes.append({"id": "node_1", "type": "choice", "speaker": "Village Elder", "text": "Will you help us deal with the slime infestation?", "choices": choice_list})
+	dialogue_nodes.append({"id": "node_accept", "type": "text", "speaker": "Village Elder", "text": "Wonderful! Defeat 5 slimes and bring back 3 potions you find. Return to me when you're done.", "next": "node_end"})
+	dialogue_nodes.append({"id": "node_info", "type": "text", "speaker": "Village Elder", "text": "Slimes are weak creatures, but they appear in groups. Goblins are trickier - they're fast and cunning. Be careful out there!", "next": "node_1"})
+	dialogue_nodes.append({"id": "node_decline", "type": "text", "speaker": "Village Elder", "text": "I understand. Come back when you're ready. The forest isn't going anywhere... though the monsters keep multiplying.", "next": "node_end"})
+	dialogue_nodes.append({"id": "node_end", "type": "end"})
+
 	var elder_dialogue: Dictionary = {
 		"id": "elder_intro", "display_name": "Elder Introduction",
 		"speaker_name": "Village Elder",
-		"nodes": [
-			{"id": "node_0", "type": "text", "speaker": "Village Elder", "text": "Welcome, young adventurer! Our village has been troubled by monsters in the Emerald Forest.", "next": "node_1"},
-			{"id": "node_1", "type": "choice", "speaker": "Village Elder", "text": "Will you help us deal with the slime infestation?", "choices": [
-				{"text": "I'll take care of it!", "next": "node_accept"},
-				{"text": "Tell me more about the monsters.", "next": "node_info"},
-				{"text": "Not right now.", "next": "node_decline"},
-			]},
-			{"id": "node_accept", "type": "text", "speaker": "Village Elder", "text": "Wonderful! Defeat 5 slimes and bring back 3 potions you find. Return to me when you're done.", "next": "node_end"},
-			{"id": "node_info", "type": "text", "speaker": "Village Elder", "text": "Slimes are weak creatures, but they appear in groups. Goblins are trickier - they're fast and cunning. Be careful out there!", "next": "node_1"},
-			{"id": "node_decline", "type": "text", "speaker": "Village Elder", "text": "I understand. Come back when you're ready. The forest isn't going anywhere... though the monsters keep multiplying.", "next": "node_end"},
-			{"id": "node_end", "type": "end"},
-		],
 		"skippable": true, "text_speed": 1.0,
 	}
-	_make_resource(base + "fk_dialogue.gd", elder_dialogue, "res://rpg_data/rpg_dialogue/elder_intro.tres")
+	var dialogue_path: String = "res://rpg_data/rpg_dialogue/elder_intro.tres"
+	var dialogue_res: Resource = _make_resource(base + "fk_dialogue.gd", elder_dialogue, dialogue_path)
+	dialogue_res.set("nodes", dialogue_nodes)
+	ResourceSaver.save(dialogue_res, dialogue_path)
 	_log_setup("  + Dialogue: Elder Introduction")
 
 	# ===== QUEST =====
 	_log_setup("[b]Creating Quest...[/b]")
+
+	# Build quest objectives as typed Array[Dictionary] so Godot serializes them properly.
+	var quest_objectives: Array[Dictionary] = []
+	quest_objectives.append({"id": "kill_slimes", "type": "kill", "description": "Defeat 5 Slimes", "target": "slime", "count": 5, "optional": false, "hidden": false})
+	quest_objectives.append({"id": "collect_potions", "type": "collect", "description": "Collect 3 Potions", "target": "potion", "count": 3, "optional": false, "hidden": false})
+	quest_objectives.append({"id": "report_elder", "type": "talk", "description": "Report to the Village Elder", "target": "elder", "count": 1, "optional": false, "hidden": false})
 
 	var slime_quest: Dictionary = {
 		"id": "slime_slayer", "display_name": "Slime Slayer",
@@ -616,15 +654,13 @@ func _run_quick_setup() -> void:
 		"description": "Slimes have been multiplying in the Emerald Forest, threatening the village's safety. The Elder has asked you to defeat 5 slimes and collect 3 potions dropped by the creatures, then report back.",
 		"quest_type": "Side Quest",
 		"level_requirement": 1,
-		"objectives": [
-			{"id": "kill_slimes", "type": "kill", "description": "Defeat 5 Slimes", "target": "slime", "count": 5, "optional": false, "hidden": false},
-			{"id": "collect_potions", "type": "collect", "description": "Collect 3 Potions", "target": "potion", "count": 3, "optional": false, "hidden": false},
-			{"id": "report_elder", "type": "talk", "description": "Report to the Village Elder", "target": "elder", "count": 1, "optional": false, "hidden": false},
-		],
 		"exp_reward": 50, "gold_reward": 100,
 		"abandonable": true, "repeatable": false,
 	}
-	_make_resource(base + "fk_quest.gd", slime_quest, "res://rpg_data/rpg_quest/slime_slayer.tres")
+	var quest_path: String = "res://rpg_data/rpg_quest/slime_slayer.tres"
+	var quest_res: Resource = _make_resource(base + "fk_quest.gd", slime_quest, quest_path)
+	quest_res.set("objectives", quest_objectives)
+	ResourceSaver.save(quest_res, quest_path)
 	_log_setup("  + Quest: Slime Slayer")
 
 	# ===== DONE =====
@@ -1331,11 +1367,11 @@ func _on_create_resource(res_type: String) -> void:
 	dialog.add_filter("*.tres ; Godot Resource")
 
 	# Set default directory
-	var default_dir := "res://rpg_data/" + res_type.to_snake_case() + "/"
+	var default_dir := _get_resource_dir(res_type)
 	if not DirAccess.dir_exists_absolute(default_dir):
 		DirAccess.make_dir_recursive_absolute(default_dir)
 	dialog.current_dir = default_dir
-	dialog.current_file = "new_" + res_type.to_snake_case().trim_prefix("fk_") + ".tres"
+	dialog.current_file = "new_" + res_type.trim_prefix("FK").to_snake_case() + ".tres"
 
 	dialog.file_selected.connect(func(path: String):
 		var script := load(script_path)
@@ -1370,7 +1406,7 @@ func _on_browse_resources(res_type: String) -> void:
 	dialog.title = "Browse " + res_type + " Resources"
 	dialog.add_filter("*.tres ; Godot Resource")
 
-	var default_dir := "res://rpg_data/" + res_type.to_snake_case() + "/"
+	var default_dir := _get_resource_dir(res_type)
 	if DirAccess.dir_exists_absolute(default_dir):
 		dialog.current_dir = default_dir
 	else:
@@ -1578,7 +1614,7 @@ func _refresh_database() -> void:
 		listing.add_child(cat_label)
 
 		for res_type in RESOURCE_CATEGORIES[category]:
-			var dir_path: String = "res://rpg_data/" + res_type.to_snake_case() + "/"
+			var dir_path: String = _get_resource_dir(res_type)
 			var count := 0
 			if DirAccess.dir_exists_absolute(dir_path):
 				var dir := DirAccess.open(dir_path)

@@ -138,6 +138,7 @@ func load_dialogue(resource: Resource) -> void:
 		_graph_edit.add_child(graph_node)
 
 	# Phase 2: Create connections
+	# NOTE: GraphEdit.connect_node uses PORT indices (nth enabled port), not slot indices.
 	for node_data: Variant in nodes_array:
 		var data: Dictionary = node_data
 		var from_id: String = data.get("id", "")
@@ -145,24 +146,28 @@ func load_dialogue(resource: Resource) -> void:
 
 		match type:
 			"text", "action":
+				# Text/Action: slot 0 has the only output -> output port 0
 				var next_id: String = data.get("next", "")
 				if not next_id.is_empty() and _node_map.has(next_id):
 					_graph_edit.connect_node(from_id, 0, next_id, 0)
 			"choice":
+				# Choice: slots 0-2 have no output. Choice rows at slots 3+ each have output.
+				# Output port 0 = first choice, port 1 = second choice, etc.
 				var choices: Array = data.get("choices", [])
 				for i in range(choices.size()):
 					var choice: Dictionary = choices[i]
 					var next_id: String = choice.get("next", "")
 					if not next_id.is_empty() and _node_map.has(next_id):
-						# Choice output ports start at slot index 3 (after speaker, text, label)
-						_graph_edit.connect_node(from_id, i + 3, next_id, 0)
+						_graph_edit.connect_node(from_id, i, next_id, 0)
 			"condition":
+				# Condition: slot 0 has no output. Slots 1 (True) and 2 (False) have output.
+				# Output port 0 = True, output port 1 = False.
 				var true_next: String = data.get("true_next", "")
 				var false_next: String = data.get("false_next", "")
 				if not true_next.is_empty() and _node_map.has(true_next):
-					_graph_edit.connect_node(from_id, 1, true_next, 0)
+					_graph_edit.connect_node(from_id, 0, true_next, 0)
 				if not false_next.is_empty() and _node_map.has(false_next):
-					_graph_edit.connect_node(from_id, 2, false_next, 0)
+					_graph_edit.connect_node(from_id, 1, false_next, 0)
 
 	# Phase 3: Auto-layout if any nodes lacked position data
 	if needs_layout:
@@ -215,14 +220,15 @@ func _save_dialogue() -> void:
 					var cc_edit: Variant = gn.get_meta("choice_cond_" + str(i), null)
 					choice_dict["text"] = ct_edit.text if ct_edit else ""
 					choice_dict["condition"] = cc_edit.text if cc_edit else ""
-					var slot_idx: int = i + 3
-					choice_dict["next"] = connection_map.get(node_id + ":" + str(slot_idx), "")
+					# Port index i (not slot index) since GraphEdit uses port indices
+					choice_dict["next"] = connection_map.get(node_id + ":" + str(i), "")
 					choices.append(choice_dict)
 				node_dict["choices"] = choices
 			"condition":
 				node_dict["condition"] = _read_meta_line(gn, "condition_edit")
-				node_dict["true_next"] = connection_map.get(node_id + ":1", "")
-				node_dict["false_next"] = connection_map.get(node_id + ":2", "")
+				# Output port 0 = True (slot 1), port 1 = False (slot 2)
+				node_dict["true_next"] = connection_map.get(node_id + ":0", "")
+				node_dict["false_next"] = connection_map.get(node_id + ":1", "")
 			"action":
 				node_dict["action"] = _read_meta_line(gn, "action_edit")
 				var next_target: String = connection_map.get(node_id + ":0", "")

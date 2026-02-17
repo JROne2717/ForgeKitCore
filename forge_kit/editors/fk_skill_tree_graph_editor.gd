@@ -337,13 +337,13 @@ func _create_passive_node(data: Dictionary) -> GraphNode:
 	if res_val and res_val is Resource:
 		res_edit.text = (res_val as Resource).resource_path
 	res_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	res_edit.placeholder_text = "res://rpg_data/fk_passive_skill/..."
+	res_edit.placeholder_text = "res://rpg_data/rpg_passive_skill/..."
 	res_hbox.add_child(res_edit)
 	var browse_btn := Button.new()
 	browse_btn.text = "..."
 	browse_btn.tooltip_text = "Browse for passive skill resource"
 	browse_btn.custom_minimum_size = Vector2(28, 0)
-	browse_btn.pressed.connect(_open_resource_browser.bind(res_edit, "res://rpg_data/fk_passive_skill/", "passive"))
+	browse_btn.pressed.connect(_open_resource_browser.bind(res_edit, "res://rpg_data/rpg_passive_skill/", "passive"))
 	res_hbox.add_child(browse_btn)
 	gn.add_child(res_hbox)
 	gn.set_meta("resource_edit", res_edit)
@@ -444,13 +444,13 @@ func _create_ability_node(data: Dictionary) -> GraphNode:
 	if res_val and res_val is Resource:
 		res_edit.text = (res_val as Resource).resource_path
 	res_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	res_edit.placeholder_text = "res://rpg_data/fk_ability/..."
+	res_edit.placeholder_text = "res://rpg_data/rpg_ability/..."
 	res_hbox.add_child(res_edit)
 	var browse_btn := Button.new()
 	browse_btn.text = "..."
 	browse_btn.tooltip_text = "Browse for ability resource"
 	browse_btn.custom_minimum_size = Vector2(28, 0)
-	browse_btn.pressed.connect(_open_resource_browser.bind(res_edit, "res://rpg_data/fk_ability/", "ability"))
+	browse_btn.pressed.connect(_open_resource_browser.bind(res_edit, "res://rpg_data/rpg_ability/", "ability"))
 	res_hbox.add_child(browse_btn)
 	gn.add_child(res_hbox)
 	gn.set_meta("resource_edit", res_edit)
