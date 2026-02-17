@@ -102,7 +102,7 @@ If you have ideas, feedback, or want to contribute, open an issue or start a dis
 If you want to support ongoing development, you can join on Patreon.
 
 https://patreon.com/JROne2717
-https://discord.gg/tXZw3gDNSk
+[https://discord.gg/tXZw3gDNSk](https://discord.gg/EbD9r95FA4)
 
 ForgeKit is not just a plugin.
 It’s a foundation we improve together.
