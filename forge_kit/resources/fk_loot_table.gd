@@ -27,6 +27,10 @@ extends Resource
 ## Guaranteed minimum number of items dropped (picks top weighted).
 @export var guaranteed_drops: int = 0
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Roll the loot table and return an array of {"item": FKItem, "quantity": int}.
 func roll() -> Array[Dictionary]:
 	var results: Array[Dictionary] = []

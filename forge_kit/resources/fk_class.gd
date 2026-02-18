@@ -40,6 +40,10 @@ extends Resource
 ## Maximum level for this class.
 @export var max_level: int = 99
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Calculate experience needed for a given level.
 func get_exp_for_level(level: int) -> int:
 	match exp_curve:

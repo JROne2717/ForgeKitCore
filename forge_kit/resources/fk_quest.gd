@@ -83,6 +83,10 @@ extends Resource
 ## Dialogue shown while quest is in progress.
 @export var progress_dialogue: Resource  # FKDialogue
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Check if all non-optional objectives are met given a progress dictionary.
 ## progress maps objective_id -> current_count.
 func is_complete(progress: Dictionary) -> bool:

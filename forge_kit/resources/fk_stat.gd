@@ -20,5 +20,9 @@ extends Resource
 ## Color used in UI for this stat.
 @export var color: Color = Color.WHITE
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 func _to_string() -> String:
 	return display_name if display_name else id

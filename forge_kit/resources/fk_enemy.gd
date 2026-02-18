@@ -58,6 +58,10 @@ extends Resource
 ## Is this enemy a boss (disables flee)?
 @export var is_boss: bool = false
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Select an ability based on AI patterns and current state.
 func select_ability(current_hp_percent: float) -> Resource:
 	if abilities.is_empty():

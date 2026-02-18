@@ -21,6 +21,10 @@ extends Resource
 ## Icon for this stat (optional).
 @export var icon: Texture2D
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Calculate the derived value from a dictionary of stat_id -> current_value.
 func calculate(base_stats: Dictionary) -> float:
 	var total: float = flat_bonus

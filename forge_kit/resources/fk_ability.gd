@@ -64,6 +64,10 @@ extends Resource
 ## Classes that can use this ability. Empty means all.
 @export var class_restrictions: Array[String] = []
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Calculate the final power of this ability given a stat dictionary.
 func calculate_power(stats: Dictionary) -> float:
 	var power := base_power

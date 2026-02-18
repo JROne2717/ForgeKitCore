@@ -36,6 +36,10 @@ extends Resource
 ## Total skill points available (or -1 for level-based).
 @export var max_points: int = -1
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Get all nodes in a specific tier.
 func get_nodes_in_tier(tier: int) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

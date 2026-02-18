@@ -1631,10 +1631,7 @@ func _refresh_database() -> void:
 							btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 							btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 							var full_path: String = dir_path + file
-							btn.pressed.connect(func():
-								if editor_plugin:
-									editor_plugin.get_editor_interface().edit_resource(load(full_path))
-							)
+							btn.pressed.connect(_open_resource.bind(full_path))
 							listing.add_child(btn)
 						file = dir.get_next()
 
@@ -1646,6 +1643,11 @@ func _refresh_database() -> void:
 				listing.add_child(empty_label)
 
 		listing.add_child(HSeparator.new())
+
+
+func _open_resource(path: String) -> void:
+	if editor_plugin:
+		editor_plugin.get_editor_interface().edit_resource(load(path))
 
 
 func _generate_scene_template(scene_name: String, path: String) -> void:

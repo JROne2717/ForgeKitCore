@@ -34,6 +34,10 @@ extends Resource
 ## Maximum player level for encounters (-1 = no cap).
 @export var max_player_level: int = -1
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Roll a random encounter and return {"enemies": [FKEnemy], "count": int}.
 func roll_encounter() -> Dictionary:
 	if entries.is_empty():

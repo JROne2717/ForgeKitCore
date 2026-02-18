@@ -46,5 +46,9 @@ extends Resource
 ## Maximum character level.
 @export var max_level: int = 99
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 func _to_string() -> String:
 	return game_name

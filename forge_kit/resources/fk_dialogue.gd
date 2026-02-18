@@ -45,6 +45,10 @@ extends Resource
 ## Can the player skip this dialogue?
 @export var skippable: bool = true
 
+## --- Custom ---
+## Store any additional data your project needs. ForgeKit will not touch this.
+@export var custom_data: Dictionary = {}
+
 ## Get the starting node.
 func get_start_node() -> Dictionary:
 	if nodes.is_empty():

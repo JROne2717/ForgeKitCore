@@ -1,143 +1,100 @@
 # ForgeKit for Godot
 
-A game creation toolkit for Godot 4.x. The current release includes a full RPG module with classes, enemies, items, abilities, stats, loot tables, encounters, zones, skill trees, dialogues, quests, and more.
+ForgeKit is an opinionated game framework for Godot 4.x. It provides a structured data model, editor tooling, and optional runtime systems to reduce boilerplate and keep RPG projects consistent as they grow.
 
-## Features (v1.0.0)
+The current release (v0.1.2) includes the RPG Core module with 14 structured resource types and editor tooling. Advanced runtime systems are planned and distributed separately.
 
-### RPG Module - 14 Custom Resource Types
+## Documentation
 
-All game data is stored as Godot `.tres` resource files. They're version-control friendly, easy to edit, and show up in the Godot inspector.
+Full documentation is available in the [/docs](docs/README.md) directory:
+
+- [Quickstart guide](docs/quickstart.md)
+- [Architecture overview](docs/concepts/architecture.md)
+- [Extensibility guide](docs/concepts/extensibility.md)
+- [Dialogue walkthrough](docs/guides/dialogue.md)
+- [Quest walkthrough](docs/guides/quests.md)
+- [Resource type reference](docs/reference/resources.md)
+- [Troubleshooting](docs/troubleshooting.md)
+
+## Design Philosophy
+
+ForgeKit enforces structure by default. Resource schemas, directory conventions, and editor tooling assume a consistent layout.
+
+The trade-off is less ad-hoc flexibility at the start of a project. The benefit is predictable tooling behavior, version-control friendly data, and easier onboarding for additional developers.
+
+This project prioritizes long-term maintainability over maximum configurability in v0.x.
+
+ForgeKit is designed for projects that want structure early rather than building custom data schemas from scratch.
+
+## Core vs Advanced
+
+ForgeKit is split into two layers:
+
+- **Core** - Data model and editor tooling. Resource type definitions, the editor dock, visual editors, FKDatabase, FKSaveSystem. Free and open source.
+- **Advanced** - Runtime gameplay systems. Battle manager, dialogue player, quest tracker, inventory manager, encounter triggers. Distributed separately.
+
+Core functions independently. Advanced depends on Core. There are no reverse dependencies.
+
+## Features (v0.1.2)
+
+### 14 Resource Types
+
+All game data is stored as `.tres` files under `res://rpg_data/`. Version-control friendly, editable in the Inspector.
 
 | Resource | Description |
 |----------|-------------|
-| **FKStat** | Base stats (Strength, Dexterity, etc.) with min/max/default values |
-| **FKDerivedStat** | Calculated stats from weighted base stats (Evasion = DEX * 0.5 + LCK * 0.3) |
-| **FKClass** | Character classes with base stats, stat growth, equippable types, abilities by level, EXP curves |
-| **FKEnemy** | Enemies with stats, AI behavior, weaknesses/resistances, loot tables, EXP/gold rewards |
-| **FKItem** | Weapons, armor, consumables, key items with stats, equipment slots, rarity, economy values |
-| **FKAbility** | Active abilities/spells with damage formulas, targeting, costs, status effects, scaling |
-| **FKPassiveSkill** | Passive bonuses and traits with conditional activation |
-| **FKSkillTree** | Skill trees with tiered nodes, prerequisites, and point costs |
-| **FKLootTable** | Weighted random loot tables with guaranteed drops, roll counts, quantity ranges |
-| **FKEncounterTable** | Random encounter tables with enemy groups, step-based triggering, level ranges |
-| **FKZone** | Game areas/maps with encounter tables, NPCs, connections, music, weather |
-| **FKDialogue** | Branching dialogue trees with choices, conditions, actions, speaker portraits |
-| **FKQuest** | Quest system with objectives, rewards, prerequisites, dialogue hooks, quest chains |
-| **FKSettings** | Project-wide config: genre, stats, elements, equipment slots, economy, battle system |
+| **FKStat** | Base stats with min/max/default values |
+| **FKDerivedStat** | Calculated stats from weighted base stats |
+| **FKClass** | Character classes with stat growth, equippable types, abilities by level, EXP curves |
+| **FKEnemy** | Enemies with stats, AI behavior, weaknesses/resistances, loot tables, rewards |
+| **FKItem** | Weapons, armor, consumables, key items with stat modifiers, equipment slots, rarity |
+| **FKAbility** | Active abilities with damage formulas, targeting, costs, status effects, scaling |
+| **FKPassiveSkill** | Passive bonuses with conditional activation |
+| **FKSkillTree** | Skill trees with tiered nodes, prerequisites, point costs |
+| **FKLootTable** | Weighted loot tables with guaranteed drops and quantity ranges |
+| **FKEncounterTable** | Random encounters with enemy groups, step-based triggering, level ranges |
+| **FKZone** | Game areas with encounters, NPCs, connections, music, weather |
+| **FKDialogue** | Branching dialogue trees with choices, conditions, actions |
+| **FKQuest** | Quests with objectives, rewards, prerequisites, chains |
+| **FKSettings** | Project-wide config: stats, elements, equipment slots, economy, battle type |
 
-### Quick Setup
-
-New to ForgeKit? The **Quick Setup** tab generates a complete starter RPG dataset with one click. It creates **45 interconnected resources** so you can see how everything fits together and start customizing right away:
-
-- **6 Base Stats** - Strength, Dexterity, Intelligence, Wisdom, Vitality, Luck
-- **4 Derived Stats** - Physical Attack, Magic Attack, Evasion, Heal Power
-- **8 Abilities** - Slash, Power Strike, Fireball, Ice Shard, Heal, Group Heal, Shield Bash, Poison Sting
-- **5 Passive Skills** - Iron Body, Keen Eye, Arcane Mind, Last Stand, Lucky Star
-- **1 Skill Tree** - Warrior tree with 6 nodes across 3 tiers
-- **3 Classes** - Warrior, Mage, Rogue with full stat growth curves
-- **8 Items** - Potions, Ethers, Antidotes, Iron Sword, Wooden Staff, Iron Dagger, Leather Armor, Iron Shield
-- **4 Enemies** - Slime, Goblin, Skeleton, Dragon (boss)
-- **2 Loot Tables** - Common drops and boss drops with weighted chances
-- **1 Encounter Table** - Forest encounters with varied enemy groups
-- **1 Zone** - Emerald Forest with encounters, recommended levels, and settings
-- **1 Dialogue** - Village Elder introduction with branching choices
-- **1 Quest** - "Slime Slayer" with kill, collect, and talk objectives
-
-### Setup Tab
-
-Configure your game's core systems before creating any resources. Pick a genre preset and it auto-fills everything, then tweak what you want.
-
-**6 Genre Presets:**
-- Classic JRPG, Action RPG, Tactical RPG, Dungeon Crawler, Open World, Autobattler
-
-**7 Configurable Sections:**
-1. Game Profile
-2. Stat Builder
-3. Derived Stats
-4. Element System
-5. Equipment Slots
-6. Economy
-7. Battle System
+Every resource type includes a `custom_data: Dictionary` field for project-specific extensions.
 
 ### Editor Dock
 
-An integrated dock panel in the Godot editor with five tabs:
+Five-tab dock panel integrated into the Godot editor:
 
-- **Quick Setup** - One-click starter dataset with 45 resources
-- **Setup** - Genre presets and core game configuration
-- **Resources** - Create any resource type, browse existing ones, access visual editors
-- **Scenes** - Generate pre-built scene templates
-- **Database** - View all resources at a glance, validate data, import/export JSON
+- **Quick Setup** - Generates 45 starter resources in one click
+- **Setup** - Genre presets (6 presets) and project configuration (stats, elements, slots, economy, battle system)
+- **Resources** - Create and browse resources by type, access visual editors
+- **Scenes** - Generate scene templates
+- **Database** - View all resources, click to edit in Inspector
 
-### Visual Dialogue Editor
+### Quick Setup
 
-A node-graph editor for building dialogue trees visually. No manual dictionary editing needed.
+Generates a complete starter dataset: 6 stats, 4 derived stats, 3 classes, 4 enemies, 8 items, 8 abilities, 5 passives, 1 skill tree, 2 loot tables, 1 encounter table, 1 zone, 1 dialogue, 1 quest. All interconnected.
 
-- 5 node types: Text (blue), Choice (gold), Condition (purple), Action (green), End (red)
-- Drag-and-drop connections between nodes
-- Edit speaker names, text, emotions, conditions, and actions inline
-- Choice and condition branching with color-coded outputs
-- Right-click context menu, toolbar buttons, auto-layout
-- Positions save and restore between sessions
+### Visual Editors
 
-### Visual Skill Tree Editor
+**Dialogue Graph Editor** - Node-graph editor for dialogue trees. Five node types (text, choice, condition, action, end). Drag connections between nodes, edit inline, auto-layout.
 
-A node-graph editor for building skill trees with drag-and-drop prerequisite chains.
+**Skill Tree Editor** - Node-graph editor for skill trees. Three node types (passive, ability, milestone). Define prerequisites with connections, configure tiers and point costs.
 
-- 3 node types: Passive Skill (teal), Ability Unlock (orange), Milestone (gold)
-- Connect nodes to define unlock requirements
-- Edit names, resource paths, costs, ranks, tiers, and descriptions inline
-- Tier-based auto-layout, configurable tier count and points-per-tier
-- Right-click context menu, toolbar buttons
-- Positions save and restore between sessions
+### Additional Tools
 
-### Damage Formula Tester
+- **Damage Formula Tester** - Configure and test ability damage calculations in real time. Load from existing FKAbility or FKEnemy resources.
+- **Data Validation** - Scan all resources for missing fields, duplicate IDs, broken references, and balance issues.
+- **JSON Import/Export** - Export resources to JSON, import from JSON. Handles nested resources and vectors.
+- **Scene Generator** - Create scenes from 13 types (dungeon, town, arena, etc.) with configurable components.
+- **Scene Templates** - 9 pre-built templates: battle, overworld, title screen, game over, dialogue, shop, inventory, party menu, save/load.
 
-Test and tune ability damage formulas in real-time.
+### Utilities
 
-- Configure base power, scaling stat, multiplier, variance, crit bonus, hit count
-- Attacker stats auto-load from your project's stat definitions
-- Adjust defense and element resistance on the defender side
-- Results update instantly as you change any value
-- Load settings directly from FKAbility or FKEnemy resource files
-- Uses standard RPG defense formula: `damage = raw_power * (100 / (100 + defense))`
+- **FKDatabase** - Scans `rpg_data/` directories, caches resources, provides lookup by type and ID.
+- **FKSaveSystem** - JSON-based save/load with multiple slots and metadata.
 
-### Data Validation
+### Data Layout
 
-Scans all ForgeKit resources for errors, broken references, and balance issues.
-
-- Checks for missing fields, duplicate IDs, broken references, empty collections, and balance problems
-- Color-coded output (red errors, yellow warnings)
-- Copy results to clipboard
-
-### Import / Export JSON
-
-Export and import ForgeKit resources as JSON files.
-
-- Export all resources or filter by type
-- Import from JSON to recreate `.tres` files
-- Handles nested resources, vectors, colors, and resource references
-
-### Scene Generator
-
-Create custom scenes with configurable options:
-
-- 13 scene types (Dungeon Room, Town, World Map, Boss Arena, and more)
-- 2D or 3D rendering modes
-- Optional camera, HUD, music, and transition components
-
-### Pre-Built Scene Templates
-
-9 ready-to-customize templates: Battle Scene, Overworld, Title Screen, Game Over, Dialogue, Shop, Inventory, Party Menu, Save/Load.
-
-### Utility Systems
-
-- **FKDatabase** - Runtime database for loading, caching, and querying resources by type and ID
-- **FKSaveSystem** - JSON-based save/load with multiple slots and metadata
-
-### Data Organization
-
-Resources are organized into `res://rpg_data/` subdirectories:
 ```
 res://rpg_data/
   rpg_settings/
@@ -158,35 +115,29 @@ res://rpg_data/
 
 ---
 
-## Community & Support
-
-- **Patreon** - https://patreon.com/JROne2717
-- **Discord** - https://discord.gg/EbD9r95FA4
-
----
-
 ## Installation
 
-1. Download or clone this repository
-2. Copy the contents into your Godot project's `addons/forge_kit/` directory
-3. Open your project in Godot 4.x
-4. Go to **Project > Project Settings > Plugins**
-5. Find "ForgeKit" and enable it
-6. The ForgeKit dock will appear in the right panel
+1. Download or clone this repository.
+2. Copy `addons/forge_kit/` into your project's `addons/` directory.
+3. Open the project in Godot 4.x.
+4. Go to Project > Project Settings > Plugins.
+5. Enable ForgeKit.
+6. The dock appears in the right panel.
 
 ## Requirements
 
 - Godot 4.2 or later
 - GDScript (no C# required)
 
-## Documentation
-
-For a step-by-step guide covering every feature, see [HOW_TO_USE.md](HOW_TO_USE.md).
-
 ## License
 
 MIT License. See [LICENSE](LICENSE) for full terms.
 
+## Links
+
+- [Patreon](https://patreon.com/JROne2717)
+- [Discord](https://discord.gg/EbD9r95FA4)
+
 ## Author
 
-Created by **JROne2717**
+Created by JROne2717
