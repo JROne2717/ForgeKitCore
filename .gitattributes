@@ -1,15 +1,14 @@
-# Normalize line endings
 * text=auto eol=lf
 
-# Ignore everything by default
-* export-ignore
+/* export-ignore
 
-# Include these in export
-!.gitattributes !export-ignore
-!README.md !export-ignore
-!LICENSE !export-ignore
-!HOW_TO_USE.md !export-ignore
-!/docs !export-ignore
-!/docs/** !export-ignore
-!/addons !export-ignore
+!/addons/ !export-ignore
 !/addons/** !export-ignore
+
+!/docs/ !export-ignore
+!/docs/** !export-ignore
+
+!/HOW_TO_USE.md !export-ignore
+
+!/README.md !export-ignore
+!/LICENSE !export-ignore
