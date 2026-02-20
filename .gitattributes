@@ -2,13 +2,10 @@
 
 /* export-ignore
 
-!/addons/ !export-ignore
-!/addons/** !export-ignore
+/addons/ -export-ignore
+/addons/** -export-ignore
 
-!/docs/ !export-ignore
-!/docs/** !export-ignore
+/docs/ -export-ignore
+/docs/** -export-ignore
 
-!/HOW_TO_USE.md !export-ignore
-
-!/README.md !export-ignore
-!/LICENSE !export-ignore
+/HOW_TO_USE.md -export-ignore
