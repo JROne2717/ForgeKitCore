@@ -1448,7 +1448,7 @@ func _on_create_scene(scene_name: String) -> void:
 	if not DirAccess.dir_exists_absolute(default_dir):
 		DirAccess.make_dir_recursive_absolute(default_dir)
 	dialog.current_dir = default_dir
-	dialog.current_file = scene_name.to_snake_case().replace(" ", "_") + ".tscn"
+	dialog.current_file = scene_name.to_snake_case().replace("/", "_") + ".tscn"
 
 	dialog.file_selected.connect(func(path: String):
 		# Load and duplicate the template
